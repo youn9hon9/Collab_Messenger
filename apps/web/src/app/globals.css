@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #5b5fc7;
+  --primary-dark: #464eb8;
+  --sidebar: #f4f5f9;
+  --border: #e2e5ec;
+  --divider: #eceef2;
+  --accent-blue: #4a90e2;
+  --accent-purple: #7b68ee;
+  --bubble-me: #5b5fc7;
+  --bubble-other: #f0f1f5;
+  --text-primary: #1a1d26;
+  --text-muted: #6b7280;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: "Pretendard", "Apple SD Gothic Neo", system-ui, sans-serif;
+  background: #fff;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+.avatar-purple {
+  background: linear-gradient(135deg, #7b68ee 0%, #5b5fc7 100%);
+}
+
+.btn-invite {
+  background: var(--accent-blue);
+}
+
+.btn-settings {
+  background: var(--primary);
+}

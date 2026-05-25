@@ -1,0 +1,12 @@
+{
+  "name": "collab-messenger",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix apps/web",
+    "build": "npm run build --prefix apps/web",
+    "start": "npm run start --prefix apps/web"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

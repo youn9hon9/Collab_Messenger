@@ -1,0 +1,11 @@
+{
+  "name": "Collab Messenger",
+  "short_name": "Collab",
+  "description": "협업용 메신저",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#5b5fc7",
+  "orientation": "portrait-primary",
+  "icons": []
+}
