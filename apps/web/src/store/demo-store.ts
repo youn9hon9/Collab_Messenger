@@ -25,9 +25,11 @@ import {
   initialChannelMembers,
   initialChannelMeta,
   roles as initialRoles,
+  DEFAULT_MEMBER_ROLE_ID,
   CURRENT_USER_ID,
   getUser,
 } from '@/lib/mock-data';
+import { permissionsFromKeys } from '@/lib/role-permissions';
 
 let msgCounter = 100;
 
@@ -90,9 +92,11 @@ interface DemoState {
       participantIds?: string[];
     },
   ) => void;
+  deleteEvent: (id: string) => void;
   toggleRolePermission: (roleId: string, permKey: string) => void;
   updateRoleName: (roleId: string, name: string) => void;
-  addCustomRole: (name: string) => void;
+  addCustomRole: (name: string, permissionKeys: string[]) => void;
+  deleteRole: (roleId: string) => void;
 
   setSidebarCollapsed: (v: boolean) => void;
   setNavSection: (s: NavSection) => void;
@@ -209,9 +213,12 @@ export const useDemoStore = create<DemoState>((set, get) => ({
   },
 
   updateMemberRole: (userId, role) => {
-    set({
-      users: get().users.map((u) => (u.id === userId ? { ...u, role } : u)),
-    });
+    const users = get().users.map((u) => (u.id === userId ? { ...u, role } : u));
+    const patch: Partial<DemoState> = { users };
+    if (userId === CURRENT_USER_ID) {
+      patch.currentUser = users.find((u) => u.id === CURRENT_USER_ID) ?? get().currentUser;
+    }
+    set(patch);
   },
 
   removeMember: (userId) => {
@@ -337,6 +344,20 @@ export const useDemoStore = create<DemoState>((set, get) => ({
     setTimeout(() => set({ toast: null }), 2000);
   },
 
+  deleteEvent: (id) => {
+    const wasSelected = get().selectedEventId === id;
+    set({
+      events: get().events.filter((e) => e.id !== id),
+      ...(wasSelected && {
+        selectedEventId: null,
+        panelType: null,
+        mobilePanelOpen: false,
+      }),
+      toast: '일정이 삭제되었습니다.',
+    });
+    setTimeout(() => set({ toast: null }), 2000);
+  },
+
   toggleRolePermission: (roleId, permKey) => {
     set({
       workspaceRoles: get().workspaceRoles.map((r) => {
@@ -366,16 +387,31 @@ export const useDemoStore = create<DemoState>((set, get) => ({
   },
 
   updateRoleName: (roleId, name) => {
-    set({
-      workspaceRoles: get().workspaceRoles.map((r) =>
-        r.id === roleId ? { ...r, name } : r,
-      ),
-    });
-  },
-
-  addCustomRole: (name) => {
     const trimmed = name.trim();
     if (!trimmed) return;
+    const role = get().workspaceRoles.find((r) => r.id === roleId);
+    if (role?.isSystem) return;
+    set({
+      workspaceRoles: get().workspaceRoles.map((r) =>
+        r.id === roleId ? { ...r, name: trimmed } : r,
+      ),
+      toast: '역할 이름이 저장되었습니다.',
+    });
+    setTimeout(() => set({ toast: null }), 2000);
+  },
+
+  addCustomRole: (name, permissionKeys) => {
+    const trimmed = name.trim();
+    if (!trimmed) {
+      set({ toast: '역할 이름을 입력하세요.' });
+      setTimeout(() => set({ toast: null }), 2000);
+      return;
+    }
+    if (permissionKeys.length === 0) {
+      set({ toast: '권한을 하나 이상 선택하세요.' });
+      setTimeout(() => set({ toast: null }), 2000);
+      return;
+    }
     set({
       workspaceRoles: [
         ...get().workspaceRoles,
@@ -383,12 +419,27 @@ export const useDemoStore = create<DemoState>((set, get) => ({
           id: `role-${Date.now()}`,
           name: trimmed,
           description: '맞춤 역할',
-          permissions: [{ key: 'message:send', label: '메시지 전송' }],
+          permissions: permissionsFromKeys(permissionKeys),
         },
       ],
       toast: `역할 "${trimmed}"이(가) 추가되었습니다.`,
     });
     setTimeout(() => set({ toast: null }), 2000);
+  },
+
+  deleteRole: (roleId) => {
+    const role = get().workspaceRoles.find((r) => r.id === roleId);
+    if (!role || role.isSystem) return;
+    const users = get().users.map((u) =>
+      u.role === roleId ? { ...u, role: DEFAULT_MEMBER_ROLE_ID } : u,
+    );
+    set({
+      workspaceRoles: get().workspaceRoles.filter((r) => r.id !== roleId),
+      users,
+      currentUser: users.find((u) => u.id === CURRENT_USER_ID) ?? get().currentUser,
+      toast: `역할 "${role.name}"이(가) 삭제되었습니다. 해당 멤버는 멤버 역할로 변경됩니다.`,
+    });
+    setTimeout(() => set({ toast: null }), 3000);
   },
 
   setSidebarCollapsed: (v) => set({ sidebarCollapsed: v }),

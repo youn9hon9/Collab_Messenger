@@ -54,6 +54,8 @@ export interface RoleDto {
   name: string;
   description?: string;
   permissions: { key: string; label: string }[];
+  /** 삭제·이름 변경 불가 (기본 멤버 역할) */
+  isSystem?: boolean;
 }
 
 export type TabItem = {

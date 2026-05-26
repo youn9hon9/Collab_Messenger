@@ -23,17 +23,17 @@ export function TabBar() {
             <div
               key={tab.id}
               className={clsx(
-                'group shrink-0 flex items-center gap-1.5 pl-3 pr-2.5 min-w-[112px] max-w-[240px] h-12 border-b-2 cursor-pointer text-sm transition-colors',
+                'group shrink-0 flex items-center pl-3 pr-2 min-w-[140px] max-w-[240px] w-[200px] h-12 border-b-2 cursor-pointer text-sm transition-colors',
                 activeTabId === tab.id
                   ? 'border-[var(--accent-blue)] text-[var(--accent-blue)] font-medium'
                   : 'border-transparent text-[var(--text-muted)] hover:bg-gray-50',
               )}
               onClick={() => setActiveTab(tab.id)}
             >
-              <span className="truncate">{tab.label}</span>
+              <span className="truncate flex-1 min-w-0">{tab.label}</span>
               <button
                 type="button"
-                className="opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-gray-200 shrink-0"
+                className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-gray-200 shrink-0 ml-1"
                 onClick={(e) => {
                   e.stopPropagation();
                   closeTab(tab.id);

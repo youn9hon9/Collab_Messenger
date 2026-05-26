@@ -14,7 +14,7 @@ import { RolesSection } from '@/components/settings/RolesSection';
 import { ProfileSection } from '@/components/settings/ProfileSection';
 
 export default function SettingsPage() {
-  const { users, updateMemberRole, removeMember, channels } = useDemoStore();
+  const { users, workspaceRoles, updateMemberRole, removeMember, channels } = useDemoStore();
   const [tab, setTab] = useState<'workspace' | 'channel'>('workspace');
   const [section, setSection] = useState('profile');
   const [selectedChannel, setSelectedChannel] = useState(channels[0]?.id ?? null);
@@ -35,13 +35,6 @@ export default function SettingsPage() {
           { id: 'roles', label: '역할 및 권한' },
           { id: 'danger', label: '위험 구역' },
         ];
-
-  const roleLabels: Record<string, string> = {
-    OWNER: '소유주',
-    ADMIN: '관리자',
-    MEMBER: '멤버',
-    GUEST: '게스트',
-  };
 
   const handleRemoveMember = (userId: string, name: string) => {
     if (userId === CURRENT_USER_ID) return;
@@ -68,12 +61,16 @@ export default function SettingsPage() {
                 </div>
                 <select
                   className="border border-[var(--border)] rounded-lg px-2 py-1.5 text-sm"
-                  value={m.role ?? 'MEMBER'}
+                  value={
+                    workspaceRoles.some((r) => r.id === m.role)
+                      ? m.role
+                      : workspaceRoles.find((r) => r.isSystem)?.id
+                  }
                   onChange={(e) => updateMemberRole(m.id, e.target.value)}
                 >
-                  {Object.entries(roleLabels).map(([k, v]) => (
-                    <option key={k} value={k}>
-                      {v}
+                  {workspaceRoles.map((r) => (
+                    <option key={r.id} value={r.id}>
+                      {r.name}
                     </option>
                   ))}
                 </select>

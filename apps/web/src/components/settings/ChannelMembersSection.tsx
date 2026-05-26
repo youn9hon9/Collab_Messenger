@@ -8,6 +8,7 @@ import { Avatar } from '../ui/Avatar';
 export function ChannelMembersSection({ channelId }: { channelId: string }) {
   const {
     users,
+    workspaceRoles,
     channelMembers,
     addChannelMember,
     removeChannelMember,
@@ -22,12 +23,7 @@ export function ChannelMembersSection({ channelId }: { channelId: string }) {
   );
   const notInChannel = users.filter((u) => !memberIds.includes(u.id));
 
-  const roleLabels: Record<string, string> = {
-    OWNER: '소유주',
-    ADMIN: '관리자',
-    MEMBER: '멤버',
-    GUEST: '게스트',
-  };
+  const defaultRoleId = workspaceRoles.find((r) => r.isSystem)?.id ?? workspaceRoles[0]?.id;
 
   return (
     <div>
@@ -43,12 +39,14 @@ export function ChannelMembersSection({ channelId }: { channelId: string }) {
               </div>
               <select
                 className="border border-[var(--border)] rounded-lg px-2 py-1.5 text-sm"
-                value={m.role ?? 'MEMBER'}
+                value={
+                  workspaceRoles.some((r) => r.id === m.role) ? m.role : defaultRoleId
+                }
                 onChange={(e) => updateMemberRole(m.id, e.target.value)}
               >
-                {Object.entries(roleLabels).map(([k, v]) => (
-                  <option key={k} value={k}>
-                    {v}
+                {workspaceRoles.map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {r.name}
                   </option>
                 ))}
               </select>

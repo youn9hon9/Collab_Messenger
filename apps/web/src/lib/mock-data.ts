@@ -9,12 +9,14 @@ import type {
 
 export const CURRENT_USER_ID = 'user-me';
 
+export const DEFAULT_MEMBER_ROLE_ID = 'role-2';
+
 export const users: UserDto[] = [
-  { id: 'user-me', email: 'me@uxd.team', name: '나', team: '운영팀', presence: 'ONLINE', role: 'OWNER' },
-  { id: 'user-kim', email: 'kim@uxd.team', name: '김도현', team: '서버팀', presence: 'IN_MEETING', role: 'ADMIN' },
-  { id: 'user-lee', email: 'lee@uxd.team', name: '이나영', team: '서버팀', presence: 'ONLINE', role: 'MEMBER' },
-  { id: 'user-hwang', email: 'hwang@uxd.team', name: '황성민', team: '디자인팀', presence: 'AWAY', role: 'MEMBER' },
-  { id: 'user-park', email: 'park@uxd.team', name: '박정한', team: '개발팀', presence: 'ONLINE', role: 'GUEST' },
+  { id: 'user-me', email: 'me@uxd.team', name: '나', team: '운영팀', presence: 'ONLINE', role: 'role-1' },
+  { id: 'user-kim', email: 'kim@uxd.team', name: '김도현', team: '서버팀', presence: 'IN_MEETING', role: 'role-1' },
+  { id: 'user-lee', email: 'lee@uxd.team', name: '이나영', team: '서버팀', presence: 'ONLINE', role: DEFAULT_MEMBER_ROLE_ID },
+  { id: 'user-hwang', email: 'hwang@uxd.team', name: '황성민', team: '디자인팀', presence: 'AWAY', role: DEFAULT_MEMBER_ROLE_ID },
+  { id: 'user-park', email: 'park@uxd.team', name: '박정한', team: '개발팀', presence: 'ONLINE', role: 'role-3' },
 ];
 
 export const workspaces = [
@@ -478,7 +480,8 @@ export const roles: RoleDto[] = [
   {
     id: 'role-2',
     name: '멤버',
-    description: '표준 팀 멤버 접근 권한',
+    description: '표준 팀 멤버 접근 권한 (기본 역할)',
+    isSystem: true,
     permissions: [
       { key: 'message:send', label: '메시지 전송' },
       { key: 'member:invite', label: '멤버 초대' },
