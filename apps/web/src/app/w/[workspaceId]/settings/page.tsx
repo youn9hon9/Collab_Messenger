@@ -11,17 +11,19 @@ import { DangerZoneSection } from '@/components/settings/DangerZoneSection';
 import { ChannelEditSection } from '@/components/settings/ChannelEditSection';
 import { ChannelMembersSection } from '@/components/settings/ChannelMembersSection';
 import { RolesSection } from '@/components/settings/RolesSection';
+import { ProfileSection } from '@/components/settings/ProfileSection';
 
 export default function SettingsPage() {
   const { users, updateMemberRole, removeMember, channels } = useDemoStore();
   const [tab, setTab] = useState<'workspace' | 'channel'>('workspace');
-  const [section, setSection] = useState('members');
+  const [section, setSection] = useState('profile');
   const [selectedChannel, setSelectedChannel] = useState(channels[0]?.id ?? null);
   const [inviteOpen, setInviteOpen] = useState(false);
 
   const sidebarItems =
     tab === 'workspace'
       ? [
+          { id: 'profile', label: '프로필' },
           { id: 'members', label: '멤버' },
           { id: 'roles', label: '역할 및 권한' },
           { id: 'language', label: '언어 및 지역' },
@@ -48,6 +50,10 @@ export default function SettingsPage() {
   };
 
   const renderMainContent = () => {
+    if (section === 'profile' && tab === 'workspace') {
+      return <ProfileSection />;
+    }
+
     if (section === 'members' && tab === 'workspace') {
       return (
         <>
@@ -140,7 +146,7 @@ export default function SettingsPage() {
           }`}
           onClick={() => {
             setTab('workspace');
-            setSection('members');
+            setSection('profile');
           }}
         >
           워크스페이스 설정

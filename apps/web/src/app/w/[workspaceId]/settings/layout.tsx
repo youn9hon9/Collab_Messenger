@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { AppShell } from '@/components/layout/AppShell';
 import { useDemoStore } from '@/store/demo-store';
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
@@ -34,5 +33,5 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
     setMobilePanelOpen,
   ]);
 
-  return <AppShell>{children}</AppShell>;
+  return <div className="h-screen flex flex-col overflow-hidden bg-gray-100">{children}</div>;
 }

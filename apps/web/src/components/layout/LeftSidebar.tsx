@@ -19,6 +19,7 @@ import { HoverActionItem } from '../ui/HoverActionItem';
 import { InviteModal } from '../modals/InviteModal';
 import { CreateChannelModal } from '../modals/CreateChannelModal';
 import { Avatar } from '../ui/Avatar';
+import { ProfilePresenceMenu } from './ProfilePresenceMenu';
 import { dms } from '@/lib/mock-data';
 
 export function LeftSidebar() {
@@ -31,7 +32,6 @@ export function LeftSidebar() {
     channels,
     workspaceId,
     switchWorkspace,
-    currentUser,
     mobileSidebarOpen,
     setMobileSidebarOpen,
   } = useDemoStore();
@@ -47,15 +47,6 @@ export function LeftSidebar() {
     { id: 'canvas' as const, label: 'Canvas', icon: FileText },
     { id: 'schedule' as const, label: 'Schedule', icon: Calendar },
   ];
-
-  const presenceLabel =
-    currentUser.presence === 'ONLINE'
-      ? '활동 중'
-      : currentUser.presence === 'IN_MEETING'
-        ? '회의 중'
-        : currentUser.presence === 'AWAY'
-          ? '자리 비움'
-          : '오프라인';
 
   return (
     <>
@@ -221,18 +212,7 @@ export function LeftSidebar() {
           </div>
         )}
 
-        <a
-          href="/me"
-          className="p-3 border-t border-[var(--divider)] flex items-center gap-3 hover:bg-white/50 min-h-[56px] mt-auto"
-        >
-          <Avatar name={currentUser.name} presence={currentUser.presence} />
-          {!sidebarCollapsed && (
-            <div className="min-w-0">
-              <div className="text-sm font-semibold truncate">{currentUser.name}</div>
-              <div className="text-xs text-[var(--text-muted)]">{presenceLabel}</div>
-            </div>
-          )}
-        </a>
+        <ProfilePresenceMenu collapsed={sidebarCollapsed} />
       </aside>
 
       {mobileSidebarOpen && (

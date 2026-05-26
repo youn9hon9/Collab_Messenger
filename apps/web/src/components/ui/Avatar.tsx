@@ -19,9 +19,9 @@ export function Avatar({
     presence === 'ONLINE'
       ? 'bg-green-500'
       : presence === 'IN_MEETING'
-        ? 'bg-red-500'
+        ? 'bg-amber-400'
         : presence === 'AWAY'
-          ? 'bg-amber-400'
+          ? 'bg-red-500'
           : 'bg-gray-300';
 
   return (

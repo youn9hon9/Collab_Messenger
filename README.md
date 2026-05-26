@@ -10,7 +10,7 @@ npm install
 npm run dev
 ```
 
-브라우저에서 http://localhost:3000 접속 → **데모 시작하기** 클릭
+브라우저에서 [http://localhost:3000](http://localhost:3000) 접속 → **데모 시작하기** 클릭
 
 ## 데모에서 체험할 수 있는 기능
 
@@ -41,3 +41,11 @@ apps/web/          ← 이 폴더만 실행하면 됨
 npm install
 npm run dev
 ```
+
+캐시 클리어
+
+```
+Remove-Item -Recurse -Force .next
+npm run dev
+```
+
