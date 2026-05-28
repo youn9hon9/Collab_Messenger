@@ -1,11 +1,21 @@
 'use client';
 
 import { Menu, X } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
 import { useDemoStore } from '@/store/demo-store';
 import clsx from 'clsx';
 
 export function TabBar() {
+  const router = useRouter();
+  const pathname = usePathname();
   const { tabs, activeTabId, setActiveTab, closeTab, setMobileSidebarOpen } = useDemoStore();
+
+  const handleTabClick = (tabId: string) => {
+    setActiveTab(tabId);
+    if (pathname?.includes('/settings') || pathname?.includes('/help')) {
+      router.push('/w');
+    }
+  };
 
   return (
     <div className="border-b border-[var(--divider)] bg-white shrink-0">
@@ -28,7 +38,7 @@ export function TabBar() {
                   ? 'border-[var(--accent-blue)] text-[var(--accent-blue)] font-medium'
                   : 'border-transparent text-[var(--text-muted)] hover:bg-gray-50',
               )}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabClick(tab.id)}
             >
               <span className="truncate flex-1 min-w-0">{tab.label}</span>
               <button

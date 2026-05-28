@@ -19,6 +19,16 @@ export interface MessageDto {
   channelId?: string | null;
   conversationId?: string | null;
   createdAt: string;
+  editedAt?: string | null;
+}
+
+export interface ScheduledMessageDto {
+  id: string;
+  content: string;
+  channelId?: string | null;
+  conversationId?: string | null;
+  scheduleLabel: string;
+  sendAt: string;
 }
 
 export interface EventDto {
@@ -40,6 +50,22 @@ export interface CanvasDocDto {
   tags: string[];
   isAiGenerated: boolean;
   updatedAt: string;
+}
+
+export interface CanvasVersionDto {
+  id: string;
+  docId: string;
+  content: string;
+  updatedAt: string;
+  reason: string;
+}
+
+export interface CanvasEditSuggestionDto {
+  id: string;
+  docId: string;
+  title: string;
+  suggestedContent: string;
+  reason: string;
 }
 
 export interface PollDto {

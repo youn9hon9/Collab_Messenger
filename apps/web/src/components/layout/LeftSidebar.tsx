@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   ChevronDown,
   ChevronsLeft,
@@ -10,6 +11,7 @@ import {
   FileText,
   Calendar,
   Settings,
+  HelpCircle,
   UserPlus,
   Plus,
 } from 'lucide-react';
@@ -23,6 +25,8 @@ import { ProfilePresenceMenu } from './ProfilePresenceMenu';
 import { dms } from '@/lib/mock-data';
 
 export function LeftSidebar() {
+  const router = useRouter();
+  const pathname = usePathname();
   const {
     sidebarCollapsed,
     setSidebarCollapsed,
@@ -47,6 +51,12 @@ export function LeftSidebar() {
     { id: 'canvas' as const, label: 'Canvas', icon: FileText },
     { id: 'schedule' as const, label: 'Schedule', icon: Calendar },
   ];
+
+  const ensureWorkspaceRoute = () => {
+    if (pathname?.includes('/settings') || pathname?.includes('/help')) {
+      router.push('/w');
+    }
+  };
 
   return (
     <>
@@ -106,19 +116,27 @@ export function LeftSidebar() {
             </button>
           </div>
           {!sidebarCollapsed && (
-            <div className="mt-2 flex gap-2">
-              <button
-                type="button"
-                className="flex-1 btn-invite text-white text-xs py-2.5 rounded-lg flex items-center justify-center gap-1.5 font-medium shadow-sm"
-                onClick={() => setInviteOpen(true)}
-              >
-                <UserPlus size={14} /> 초대
-              </button>
+            <div className="mt-2 space-y-2">
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  className="flex-1 btn-invite text-white text-xs py-2.5 rounded-lg flex items-center justify-center gap-1.5 font-medium shadow-sm"
+                  onClick={() => setInviteOpen(true)}
+                >
+                  <UserPlus size={14} /> 초대
+                </button>
+                <a
+                  href={`/w/${workspaceId}/settings`}
+                  className="flex-1 btn-settings text-white text-xs py-2.5 rounded-lg flex items-center justify-center gap-1.5 font-medium shadow-sm"
+                >
+                  <Settings size={14} /> 설정
+                </a>
+              </div>
               <a
-                href={`/w/${workspaceId}/settings`}
-                className="flex-1 btn-settings text-white text-xs py-2.5 rounded-lg flex items-center justify-center gap-1.5 font-medium shadow-sm"
+                href={`/w/${workspaceId}/help`}
+                className="w-full flex items-center justify-center gap-1.5 text-xs py-2.5 rounded-lg font-medium border border-[var(--border)] bg-white text-[var(--text-primary)] hover:bg-gray-50 shadow-sm"
               >
-                <Settings size={14} /> 설정
+                <HelpCircle size={14} className="text-[var(--primary)]" /> 도움말
               </a>
             </div>
           )}
@@ -143,6 +161,7 @@ export function LeftSidebar() {
                 if (item.id === 'schedule') {
                   openTab({ id: 'schedule-main', type: 'schedule', label: 'Schedule' });
                 }
+                ensureWorkspaceRoute();
                 setMobileSidebarOpen(false);
               }}
               title={item.label}
@@ -165,12 +184,15 @@ export function LeftSidebar() {
                   <HoverActionItem
                     key={ch.id}
                     onClick={() =>
-                      openTab({
-                        id: `channel-${ch.id}`,
-                        type: 'channel',
-                        label: ch.name,
-                        targetId: ch.id,
-                      })
+                      {
+                        openTab({
+                          id: `channel-${ch.id}`,
+                          type: 'channel',
+                          label: ch.name,
+                          targetId: ch.id,
+                        });
+                        ensureWorkspaceRoute();
+                      }
                     }
                   >
                     <span className="text-[var(--text-muted)] mr-1">#</span>
@@ -182,12 +204,15 @@ export function LeftSidebar() {
                   <HoverActionItem
                     key={dm.id}
                     onClick={() =>
-                      openTab({
-                        id: `dm-${dm.id}`,
-                        type: 'dm',
-                        label: dm.otherUser.name,
-                        targetId: dm.id,
-                      })
+                      {
+                        openTab({
+                          id: `dm-${dm.id}`,
+                          type: 'dm',
+                          label: dm.otherUser.name,
+                          targetId: dm.id,
+                        });
+                        ensureWorkspaceRoute();
+                      }
                     }
                   >
                     <div className="flex items-center gap-2">
@@ -234,6 +259,7 @@ export function LeftSidebar() {
             targetId: channelId,
           });
           setNavSection('channels');
+          ensureWorkspaceRoute();
         }}
       />
     </>

@@ -10,12 +10,19 @@ const config: Record<PanelType, { title: string; icon: typeof Users }> = {
   pinned: { title: '고정된 메시지', icon: Pin },
   schedule: { title: '이 채팅방과 연관된 일정', icon: Calendar },
   event: { title: '일정 상세', icon: Calendar },
-  topic: { title: '배포', icon: Search },
+  topic: { title: '검색', icon: Search },
 };
 
 export function ContextPanel({ children }: { children: React.ReactNode }) {
-  const { panelType, setPanelType, setMobilePanelOpen, mobilePanelOpen, setSelectedEvent } =
-    useDemoStore();
+  const {
+    panelType,
+    setPanelType,
+    setMobilePanelOpen,
+    mobilePanelOpen,
+    setSelectedEvent,
+    topicSearchKeyword,
+    setTopicSearchKeyword,
+  } = useDemoStore();
 
   if (!panelType) return null;
   const { title, icon: Icon } = config[panelType];
@@ -30,9 +37,20 @@ export function ContextPanel({ children }: { children: React.ReactNode }) {
           'transition-transform duration-200 shadow-xl md:shadow-none',
         )}
       >
-        <div className="flex items-center gap-2 px-4 py-3.5 border-b border-[var(--divider)] bg-[var(--sidebar)]">
-          <Icon size={18} className="text-[var(--text-muted)]" />
-          <h3 className="font-semibold text-sm flex-1">{title}</h3>
+        <div className="flex items-center gap-2 px-4 py-3 border-b border-[var(--divider)] bg-[var(--sidebar)] shrink-0">
+          <Icon size={18} className="text-[var(--text-muted)] shrink-0" />
+          {panelType === 'topic' ? (
+            <input
+              type="search"
+              className="flex-1 min-w-0 border border-[var(--border)] rounded-lg px-3 py-2 text-sm bg-white outline-none focus:ring-1 focus:ring-[var(--accent-blue)]"
+              placeholder="메시지 검색"
+              value={topicSearchKeyword}
+              onChange={(e) => setTopicSearchKeyword(e.target.value)}
+              aria-label="메시지 검색"
+            />
+          ) : (
+            <h3 className="font-semibold text-sm flex-1">{title}</h3>
+          )}
           <button
             type="button"
             onClick={() => {

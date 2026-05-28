@@ -12,6 +12,12 @@ npm run dev
 
 브라우저에서 [http://localhost:3000](http://localhost:3000) 접속 → **데모 시작하기** 클릭
 
+캐시 클리어
+```
+Remove-Item -Recurse -Force .next
+npm run dev
+```
+
 ## 데모에서 체험할 수 있는 기능
 
 - 워크스페이스 전환, 채널/DM, 다중 탭 (hover 시 닫기)
@@ -25,27 +31,3 @@ npm run dev
 
 - Next.js 15, React 19, Tailwind CSS 4, Zustand
 - 모든 데이터: `apps/web/src/lib/mock-data.ts` + `demo-store.ts`
-
-## 프로젝트 구조
-
-```
-apps/web/          ← 이 폴더만 실행하면 됨
-  src/lib/mock-data.ts
-  src/store/demo-store.ts
-  src/components/
-```
-
-루트에서 실행하려면:
-
-```powershell
-npm install
-npm run dev
-```
-
-캐시 클리어
-
-```
-Remove-Item -Recurse -Force .next
-npm run dev
-```
-
